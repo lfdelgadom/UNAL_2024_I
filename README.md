@@ -34,7 +34,7 @@ Invitamos a estudiantes y profesores a contribuir a este repositorio. Si deseas 
 
 ## Contacto
 
-Para más información sobre el curso o si tienes preguntas específicas, por favor contacta al equipo docente a través de [correo electrónico](mailto:correo@unal.edu.co).
+Para más información sobre el curso o si tienes preguntas específicas, por favor contacta al equipo docente a través de [correo electrónico](mailto:lfdelgadom@unal.edu.co).
 
 ## Licencia
 
