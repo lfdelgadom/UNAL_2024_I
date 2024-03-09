@@ -30,7 +30,8 @@ ggplot(iris, aes(x = Petal.Length, y = Sepal.Width)) +
 
 #jitter <- ruido aleatorio
 ggplot(iris, aes(x = Petal.Length, y = Sepal.Width)) +
-  geom_jitter()
+  geom_jitter(width = 0.3,
+              height = 0.5)
 
 #facets
 ggplot(iris, aes(x = Petal.Length, y = Sepal.Width)) +
@@ -44,19 +45,25 @@ ggplot(iris, aes(x = Petal.Length, y = Sepal.Width)) +
   facet_wrap(~Species) +
   geom_smooth(method = "lm", se = F, col = "red")
 
+# Add trend line non linear
+ggplot(iris, aes(x = Petal.Length, y = Sepal.Width)) +
+  geom_point() +
+  facet_wrap(~Species) +
+  geom_smooth(se = F, col = "red")
+
 # coordinates
 ggplot(iris, aes(x = Petal.Length, y = Sepal.Width)) +
   geom_point() +
   facet_wrap(~Species) +
   geom_smooth(method = "lm", se = F, col = "red") +
-  scale_y_continuous("Sepal Width", breaks = seq(0,5, 0.5))
+  scale_y_continuous("Sepal Width", breaks = seq(0, 5, 2))
 
 # theme
 ggplot(iris, aes(x = Petal.Length, y = Sepal.Width)) +
   geom_point() +
   facet_wrap(~Species) +
   geom_smooth(method = "lm", se = F, col = "red") +
-  scale_y_continuous("Sepal Width", breaks = seq(0,5, 0.5)) +
+  scale_y_continuous("Sepal Width", breaks = seq(0,5, 1)) +
   theme_bw()
 
 
@@ -66,28 +73,61 @@ ggplot(iris, aes(x = Petal.Length, y = Sepal.Width)) +
 ggplot(iris, aes(x = Petal.Length, y = Sepal.Width, col = Species)) +
   geom_point()
 
-ggplot(iris, aes(x = Petal.Length, y = Sepal.Width, col = Species, size = Petal.Width)) +
-  geom_point()
-
 ggplot(iris, aes(x = Petal.Length, y = Sepal.Width, col = Species, 
-                 size = Petal.Width, shape = Species)) +
+                 size = Petal.Width)) +
   geom_point()
 
-grafico_completo <- ggplot(iris, aes(x = Petal.Length, y = Sepal.Width, col = Species, 
-                                     size = Petal.Width, shape = Species, alpha = Sepal.Length)) +
+plot_1 <- ggplot(iris, aes(x = Petal.Length, y = Sepal.Width, col = Species, 
+                 size = Petal.Width, shape = Species)) +
+  geom_jitter()
+
+# save the last plot
+ggsave(
+  paste0("images/", "scatter_plot_iris.png"),
+  width = 8,
+  height = 6,
+  units = "in",
+  dpi = 300
+)
+
+
+grafico_completo <- ggplot(iris, aes(x = Petal.Length, y = Sepal.Width, 
+                                     col = Species, size = Petal.Width, 
+                                     shape = Species, alpha = Sepal.Length)) +
   geom_point()
 grafico_completo
 
-count(iris, Species)
+# save complete graph
+ggsave(
+  paste0("images/", "scatter_complete_iris.png"),
+  plot = grafico_completo,
+  width = 8,
+  height = 6,
+  units = "in",
+  dpi = 300
+)
+
+
+#count(iris, Species)
 
 #install.packages("plotly")
 library(plotly)
 
 #volver interactico el grafico completo
-plotly::ggplotly(grafico_completo)
+plotly::ggplotly(plot_1)
 
 
 # BAR AND BOXPLOT ----
+library(dplyr)
+
+# summary petals and sepals
+resumen <- iris %>% group_by(Species) %>% 
+  summarise(mean_sepal_length = mean(Sepal.Length), 
+            mean_petal_length = mean(Petal.Length))
+
+ggplot(resumen, aes(x = Species, y = mean_sepal_length)) +
+  geom_col()
+
 ggplot(iris, aes(x = Species, y = Sepal.Length)) +
   geom_bar(stat = "summary", fun.y = "mean")
 
@@ -98,8 +138,14 @@ ggplot(iris, aes(Species, Sepal.Length)) +
   geom_bar(stat = "summary", fun.y = "mean", fill = "blue")
 
 ggplot(iris, aes(Species, Sepal.Length)) +
-  geom_bar(stat = "summary", fun.y = "mean", fill = "#14d8a6", col = "black") +
-  geom_boxplot() 
+  geom_bar(stat = "summary", fun.y = "mean", fill = "#00166e", col = "black") + 
+  geom_boxplot()
+
+bxp <- ggplot(iris, aes(Species, Sepal.Length, fill = Species)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.1)
+
+ggsave(paste0("images/", "bxp.png"),  plot = bxp, dpi = 300, height = 6, width = 8)
 
 #Las diferentes formas de los puntos de R
 
@@ -112,9 +158,8 @@ ggplot() +
   geom_text(data=d, mapping=aes(x=p%%16, y=p%/%16+0.25, label=p), size=3)
 
 
-ggplot(iris, aes(Species, Sepal.Length)) +
-  geom_bar(stat = "summary", fun.y = "mean", fill = "#ff0080", col = "black") +
-  geom_jitter(size = 2, shape = 8)
+ggplot(iris, aes(Petal.Width, Sepal.Length)) +
+   geom_jitter(size = 2, shape = 11)
 
 myPlot <- ggplot(iris, aes(Species, Sepal.Length)) +
   geom_bar(stat = "summary", fun.y = "mean", fill = "#8cb87b", col = "black") +
@@ -137,7 +182,7 @@ myPlot + theme_minimal()
 myPlot + theme_void()
 
 ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
-  geom_boxplot(col = "black", notch = FALSE) +
+  geom_boxplot(col = "black", notch = ) +
   geom_jitter(with = 0.1, alpha = 0.5) 
 
 ggplot(iris, aes(x = Species, y = Sepal.Length, fill = Species)) +
