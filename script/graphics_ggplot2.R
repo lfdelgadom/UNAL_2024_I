@@ -13,7 +13,11 @@ dim(iris)
 # PLOT IRIS ----
 ## plot pequeno ----
 plot(iris)
-plot(iris$Petal.Length, iris$Sepal.Width)
+plot(iris$Petal.Length, iris$Sepal.Width) # petal length vs sepal width
+plot(iris$Petal.Width, iris$Sepal.Length, 
+     ylab = "Longitud del sepalo (cm)", 
+     xlab = "Ancho del petalo (cm)", 
+     col = "purple") 
 
 # GGPLOT IRIS ----
 
