@@ -1,4 +1,4 @@
-INSTALL GGPLOT2 ----
+# ---- INSTALL GGPLOT2 ----
   #install.packages("ggplot2")
   library(ggplot2)
 
@@ -8,6 +8,7 @@ data(iris)
 summary(iris) # resumen de la base de datos
 head(iris, 10) # muestra las primeras 6 entradas de la base de datos
 tail(iris)
+dim(iris)
 
 # PLOT IRIS ----
 ## plot pequeno ----
