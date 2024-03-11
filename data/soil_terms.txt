@@ -1,0 +1,41 @@
+Finca: Nombre o identificación de la finca.
+pH: Medida de la acidez o alcalinidad del suelo.
+P. BrayII: Fósforo disponible en el suelo, medido por el método Bray II.
+K: Potasio disponible en el suelo.
+Mn: Manganeso disponible en el suelo.
+B: Boro disponible en el suelo.
+N_Total: Nitrógeno total en el suelo.
+POROSIDAD: Indicador del espacio poroso en el suelo.
+Microporos: Tamaño de los microporos en el suelo.
+Hum_vol_Sat: Humedad volumétrica a saturación.
+CHS: Capacidad de campo o capacidad hídrica del suelo.
+X_6.3_mm: Fracción del suelo con un tamaño de partícula de 6.3 mm.
+X_2.1mm: Fracción del suelo con un tamaño de partícula de 2.1 mm.
+X_0.25_0.125mm: Fracción del suelo con tamaño de partícula entre 0.25 y 0.125 mm.
+Arcilla: Porcentaje de arcilla en el suelo.
+Ind_plast: Índice de plasticidad del suelo.
+MO.53um.1: Materia orgánica del suelo con tamaño de partícula menor a 0.53 micrómetros.
+C_Oxid: Carbono oxidable o Carbono orgánico total.
+Ca: Calcio disponible en el suelo.
+CIC: Capacidad de intercambio catiónico.
+Cu: Cobre disponible en el suelo.
+S: Azufre disponible en el suelo.
+D_APAR: Densidad aparente del suelo.
+Macroporos: Tamaño de los macroporos en el suelo.
+Hum_campo: Humedad del suelo en condiciones de campo.
+C.c: Capacidad de cationes del suelo.
+Infiltracion: Tasa de infiltración del agua en el suelo.
+Limo: Fracción de limo en el suelo.
+K_USLE: Factor del modelo USLE 
+MO: Materia orgánica del suelo.
+Mg: Magnesio disponible en el suelo.
+Fe: Hierro disponible en el suelo.
+Zn: Zinc disponible en el suelo.
+CE: Conductividad eléctrica del suelo.
+D_REAL: Densidad real del suelo.
+Mesoporos: Tamaño de los mesoporos en el suelo.
+Hum_grav_Sat: Humedad gravimétrica a saturación.
+PMP: Punto de marchitamiento permanente.
+LAA: Referencia a laboratorio o institución asociada.
+X_4.2mm: Fracción del suelo con un tamaño de partícula de 4.2 mm.
+X_0.5_0.25mm: Fracción del suelo con tamaño de partícula entre 0.5 y 0.25 mm.
