@@ -1,0 +1,155 @@
+---
+title: "Diseño Completamente al Azar"
+author: "Luis Fernando Delgado"
+date: "2024-03-07"
+output:
+  word_document: default
+  html_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introducción
+
+En este documento, exploraremos el diseño completamente al azar, el cual es el diseño experimental más simple y proporciona el máximo número de grados de libertad para el error.
+
+#### Características
+
+- Maneja una sola fuente de variación.
+- Tiene más grados de libertad en el error que otros diseños.
+- Requiere que las unidades experimentales sean homogéneas.
+- La asignación a los tratamientos se realiza al azar.
+
+#### Instalación y Carga de Librerías
+
+Instalaremos tidyverse debido a recientes actualizaciones en el paquete ggplot2.
+
+```{r}
+# install.packages("tidyverse")
+library(tidyverse)
+```
+
+## Caso de Estudio: Telas para Camisa de Caballero
+
+Un ingeniero de desarrollo está interesado en la resistencia a la tensión de una nueva fibra sintética para camisas de caballero. Se sabe que la calidad de la tela se afecta por la composición de algodón, variando entre 10% y 40%. Se decide probar cinco niveles de algodón (15%, 20%, 25%, 30% y 35%) con 5 replicaciones por nivel.
+
+A continuación, elaboramos la tabla de datos directamente en R.
+
+```{r}
+# Datos de resistencia por porcentaje de algodón
+Resistencia <- c(7, 7, 15, 11, 9, 12, 17, 12, 18, 18, 14, 18, 18, 19, 19, 19, 25, 22, 19, 23, 7, 10, 11, 15, 11)
+
+# Asignación de porcentajes como factor
+Porcentaje <- factor(rep(c("15%", "20%", "25%", "30%", "35%"), each = 5))
+
+# Creación del data frame
+Datos <- data.frame(Porcentaje, Resistencia)
+```
+
+#### Exportación de Datos
+
+Guardamos los datos en formato CSV para su uso externo.
+
+```{r}
+write.csv(Datos, "exp_algodon.csv", row.names = FALSE)
+```
+
+#### Limpieza del Entorno y Carga de Datos
+
+Limpiamos el entorno y cargamos el archivo generado previamente.
+
+```{r}
+rm(list = ls())
+library(readr)
+library(tidyverse)
+Datos <- read_csv("exp_algodon.csv")
+```
+
+#### Analisis exploratorio de datos
+
+Generamos una tabla con promedios, desviación estándar, error estándar y límites de confianza.
+
+```{r}
+# Calculamos estadísticas descriptivas por porcentaje
+estadisticas <- Datos %>%
+  group_by(Porcentaje) %>%
+  summarise(
+    Promedio = mean(Resistencia, na.rm = TRUE),
+    DE = sd(Resistencia, na.rm = TRUE),
+    n = n(),
+    Error = DE/sqrt(n),
+    Li = Promedio - Error,
+    Ls = Promedio + Error
+  )
+
+# Mostramos la tabla de estadísticas
+estadisticas
+```
+
+## Generación de Gráficos
+#### Gráfico de Error Estándar con ggplo2
+
+Usamos gráficos de base para visualizar la variabilidad entre los tratamientos.
+
+```{r}
+estadisticas %>%
+  ggplot(aes(x = Porcentaje, y = Promedio, col = Porcentaje)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = Li, ymax = Ls), width = 0.2) +
+  theme_minimal() +
+  labs(x = "Porcentaje de Algodón", y = "Resistencia", title = "Error Estándar de la Resistencia")
+
+```
+## Modelado Bajo un Diseño Completamente al Azar
+
+Realizamos un ANOVA para evaluar los efectos del porcentaje de algodón en la resistencia.
+
+```{r}
+library(agricolae)
+
+# convertir factor los tratamientos
+Datos$Porcentaje <- as.factor(Datos$Porcentaje)
+
+anova_telas <- aov(Resistencia ~ Porcentaje, data = Datos)
+summary(anova_telas)
+```
+#### F tabulado
+
+```{r}
+
+qf(0.05, df1 = 4, df2 = 20, lower.tail = F)
+# Ft = 2.866081
+# Fc = 14.76
+```
+
+#### Prueba de duncan
+Aplicamos la prueba de Duncan para comparar las medias de los grupos.
+
+```{r}
+compara_duncan <- duncan.test(anova_telas, "Porcentaje")
+compara_duncan$groups
+```
+
+#### Grafica de medias con Agrupación de Duncan
+
+```{r}
+bar.group(compara_duncan$groups, ylim = c(0, max(compara_duncan$groups$Resistencia) * 1.4))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
