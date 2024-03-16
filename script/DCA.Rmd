@@ -3,8 +3,8 @@ title: "Diseño Completamente al Azar"
 author: "Luis Fernando Delgado"
 date: "2024-03-07"
 output:
-  word_document: default
   html_document: default
+  word_document: default
 ---
 
 
@@ -138,18 +138,3 @@ compara_duncan$groups
 ```{r}
 bar.group(compara_duncan$groups, ylim = c(0, max(compara_duncan$groups$Resistencia) * 1.4))
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
