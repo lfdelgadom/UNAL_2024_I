@@ -1,0 +1,125 @@
+---
+title: "Diseno de Bloques completos al azar"
+author: "Luis Fernando Delgado"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Ejercicio de rendimiento de almidon de yuca
+
+Una empresa de alimentos está estudiando el efecto de 4 temperaturas sobre el rendimiento del almidón de yuca (en gramos). Cada evaluación tarda aproximadamente una hora y media, por lo que solamente se pueden realizar 4 evaluaciones por día. La idea general consiste en realizar una repetición completa del experimento en cada uno de los niveles del factor de control (factor bloque) y se realiza la aleatorización de los tratamientos dentro de cada bloque.
+
+| Temperatura | Dia 1 | Dia 2 | Dia 3 | Dia 4 |
+|-------------|-------|-------|-------|-------|
+| 30          | 14    | 14.1  | 14.5  | 14    |
+| 35          | 13.9  | 13.8  | 14.2  | 14    |
+| 40          | 14.1  | 14.2  | 14.4  | 13.9  |
+| 45          | 13    | 13.1  | 13.5  | 13.2  |
+
+## Carga de datos
+```{r}
+library(tidyverse)
+Yuca_desordenada <- read.csv("Yuca_desordenada.csv")
+Yuca_desordenada
+```
+
+## Estructurando los datos
+
+```{r}
+yuca <- Yuca_desordenada %>% pivot_longer(cols = Dia.1:Dia.4, names_to = "Dia",
+                                  values_to = "Rendimiento")
+yuca
+```
+
+## Analisis exploratorio de datos
+
+```{r}
+yuca$Temperatura <- as.factor(yuca$Temperatura)
+yuca$Dia <- as.factor(yuca$Dia)
+
+# Resumen de los datos
+str(yuca)
+summary(yuca)
+```
+## Analisis grafico - Temperatura
+
+```{r}
+bxp_temp <- yuca %>% ggplot(aes(x = Temperatura, y = Rendimiento, fill = Temperatura)) +
+  geom_boxplot() +
+  labs(x = "Temperatura (°C)", y  = "Rendimiento (%)", title = "Boxplot - Temperatura")
+
+ggsave(plot = bxp_temp, "bxp_temp.png", dpi = 300, units = "in", height = 6, width = 8)
+
+bxp_temp
+```
+
+## Analisis grafico - Dias
+
+```{r}
+bxp_dias <- yuca %>% ggplot(aes(x = Dia, y = Rendimiento, fill = Dia)) +
+  geom_boxplot() +
+  labs(x = "Dias", y  = "Rendimiento (%)", title = "Boxplot - Dias")
+
+ggsave(plot = bxp_temp, "bxp_dias.png", dpi = 300, units = "in", height = 6, width = 8)
+
+bxp_dias
+```
+
+## Analisis grafico - Dias:Temperatura
+
+```{r}
+bxp_dias_temp <- yuca %>% ggplot(aes(x = Dia, y = Rendimiento, col = Dia)) +
+  facet_wrap(~Temperatura) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1)) +
+  labs(x = NULL, y  = "Rendimiento (%)", title = "Boxplot - Dias:Temperatura")
+
+ggsave(plot = bxp_dias_temp, "bxp_dias_temp.png", dpi = 300, units = "in", height = 6, width = 8)
+
+bxp_dias_temp
+```
+
+## Modelacion bajo un DBCA - ANOVA
+
+```{r}
+modelo1 <- aov(Rendimiento ~ Temperatura + Dia, data = yuca)
+summary(modelo1)
+```
+
+## Prueba post - ANOVA (Duncan)
+
+Vamos a hacer la prueba para temperatura
+
+```{r}
+library(agricolae)
+compara_temp <- duncan.test(modelo1, "Temperatura")
+compara_temp$groups %>% rownames_to_column("Temperatura")
+```
+
+Vamos a hacer la prueba para los dias (BLOQUES)
+
+```{r}
+compara_dias <- duncan.test(modelo1, "Dia")
+compara_dias$groups %>% rownames_to_column("Dia")
+```
+
+## Prueba post - ANOVA (TUKEY)
+
+Vamos a hacer la prueba para temperatura
+
+```{r}
+compara_temp <- HSD.test(modelo1, "Temperatura")
+compara_temp$groups %>% rownames_to_column("Temperatura")
+```
+
+Vamos a hacer la prueba para los dias (BLOQUES)
+
+```{r}
+compara_dias <- HSD.test(modelo1, "Dia")
+compara_dias$groups %>% rownames_to_column("Dia")
+```
+
