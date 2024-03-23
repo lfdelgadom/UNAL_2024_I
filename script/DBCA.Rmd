@@ -21,9 +21,10 @@ Una empresa de alimentos está estudiando el efecto de 4 temperaturas sobre el r
 | 45          | 13    | 13.1  | 13.5  | 13.2  |
 
 ## Carga de datos
+
 ```{r}
 library(tidyverse)
-Yuca_desordenada <- read.csv("Yuca_desordenada.csv")
+Yuca_desordenada <- read.csv("../data/Yuca_desordenada.csv")
 Yuca_desordenada
 ```
 
@@ -45,6 +46,7 @@ yuca$Dia <- as.factor(yuca$Dia)
 str(yuca)
 summary(yuca)
 ```
+
 ## Analisis grafico - Temperatura
 
 ```{r}
@@ -122,4 +124,3 @@ Vamos a hacer la prueba para los dias (BLOQUES)
 compara_dias <- HSD.test(modelo1, "Dia")
 compara_dias$groups %>% rownames_to_column("Dia")
 ```
-
