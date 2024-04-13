@@ -6,7 +6,11 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
 ```
 
 Se presentan los datos de rendimiento de 2 variedades de arroz:
@@ -14,10 +18,18 @@ Se presentan los datos de rendimiento de 2 variedades de arroz:
 - Porte baja.
 Expuestas a 3 niveles de fertilizacion nitrogenada (0, 100 y 200 t/ha)
 
+### Carga de librerias
+
+```{r libraries, message=FALSE, warning=FALSE}
+library(readr)
+library(tidyverse)
+library(agricolae)
+```
+
+
 ## Carga de datos
 
 ```{r}
-library(readr)
 arroz <- read.csv("../data/Datos_arroz.csv", sep = ";")
 ```
 
@@ -33,14 +45,13 @@ str(arroz)
 
 ### Analisis exploratorio de datos
 
-Se lleva a cabo un analisis grafico con el pbjetivo de revisar el efecto de las variables sobre la respuesta
+Se lleva a cabo un analisis grafico con el objetivo de revisar el efecto de las variables sobre la respuesta (rendimiento)
 
 ```{r}
-library(tidyverse)
 arroz %>% ggplot(aes(x = Nitrogeno, y = Rendimiento, fill = Nitrogeno)) +
   geom_boxplot() +
   geom_jitter(width = 0.2) +
-  labs(y = "Rendimiento (t/ha)", title = "Efecto del N sobre el Rto", caption = "Author: Luis Fdo Delgado")
+  labs(y = "Rendimiento (t/ha)", title = "Efecto del Nitrogeno sobre el Rto", caption = "Author: Luis Fdo Delgado")
 
 arroz %>% ggplot(aes(x = Variedad, y = Rendimiento, fill = Variedad)) +
   geom_boxplot() +
@@ -56,16 +67,17 @@ arroz %>% ggplot(aes(x = Variedad:Nitrogeno, y = Rendimiento, fill = Variedad)) 
 #### Graficos de interaccion
 
 ```{r}
-arroz %>% group_by(Variedad, Nitrogeno) %>% 
-  summarise(Rento = mean(Rendimiento)) %>% 
-  ggplot() +
+interaccion <- arroz %>% group_by(Variedad, Nitrogeno) %>% 
+  summarise(Rento = mean(Rendimiento), 
+            Rento_sd = sd(Rendimiento))
+
+
+  interaccion %>% ggplot() +
   geom_line(aes(x = Nitrogeno, y = Rento, group = Variedad, color = Variedad), size = 0.4) +
   labs(y = "Rendimiento (t/ha)", title = "Efecto del Nitrogeno interactuando con la variedad", caption = "Author: Luis Fdo Delgado")
 
 
-arroz %>% group_by(Variedad, Nitrogeno) %>% 
-  summarise(Rento = mean(Rendimiento)) %>% 
-  ggplot() +
+interaccion %>% ggplot() +
   geom_line(aes(x = Variedad, y = Rento, group = Nitrogeno, color = Nitrogeno), size = 0.4) +
   labs(y = "Rendimiento (t/ha)", title = "Efecto del variedad interactuando con la Nitrogeno", caption = "Author: Luis Fdo Delgado")
 ```
@@ -73,10 +85,14 @@ arroz %>% group_by(Variedad, Nitrogeno) %>%
 ### Modelacion bajo un diseno de bloques completos al azar con estructura factorial
 
 ```{r}
-library(agricolae)
-
 modelo1 <- aov(Rendimiento ~ Bloque + Nitrogeno*Variedad, data = arroz)
 summary(modelo1)
+
+modelo2 <- aov(Rendimiento ~ Bloque + Tratamiento, data = arroz)
+summary(modelo2) # The best model
+
+modelo3 <- aov(Rendimiento ~ Bloque + Nitrogeno + Variedad, data = arroz)
+summary(modelo3)
 ```
 
 ### Comparacion de medias de la interaccion
