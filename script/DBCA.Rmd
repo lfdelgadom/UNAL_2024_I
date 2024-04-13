@@ -33,12 +33,13 @@ Yuca_desordenada
 ```{r}
 yuca <- Yuca_desordenada %>% pivot_longer(cols = Dia.1:Dia.4, names_to = "Dia",
                                   values_to = "Rendimiento")
-yuca
+knitr::kable(yuca)
 ```
 
 ## Analisis exploratorio de datos
 
 ```{r}
+str(yuca)
 yuca$Temperatura <- as.factor(yuca$Temperatura)
 yuca$Dia <- as.factor(yuca$Dia)
 
@@ -76,7 +77,7 @@ bxp_dias
 ```{r}
 bxp_dias_temp <- yuca %>% ggplot(aes(x = Dia, y = Rendimiento, col = Dia)) +
   facet_wrap(~Temperatura) +
-  geom_point() +
+  geom_point(size = 4) +
   theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1)) +
   labs(x = NULL, y  = "Rendimiento (%)", title = "Boxplot - Dias:Temperatura")
 
