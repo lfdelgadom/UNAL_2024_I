@@ -18,9 +18,7 @@ Expuestas a 3 niveles de fertilizacion nitrogenada (0, 100 y 200 t/ha)
 
 ```{r}
 library(readr)
-arroz <- read_delim("datos/Datos_arroz.csv", 
-    delim = ";", escape_double = FALSE, trim_ws = TRUE)
-View(arroz)
+arroz <- read.csv("../data/Datos_arroz.csv", sep = ";")
 ```
 
 ### Cambiar las clases de las variables
@@ -32,6 +30,7 @@ arroz$Nitrogeno <- as.factor(arroz$Nitrogeno)
 arroz$Bloque <- as.factor(arroz$Bloque)
 str(arroz)
 ```
+
 ### Analisis exploratorio de datos
 
 Se lleva a cabo un analisis grafico con el pbjetivo de revisar el efecto de las variables sobre la respuesta
@@ -53,6 +52,8 @@ arroz %>% ggplot(aes(x = Variedad:Nitrogeno, y = Rendimiento, fill = Variedad)) 
   geom_jitter(width = 0.2) +
   labs(y = "Rendimiento (t/ha)", title = "Efecto del variedad:Nitrogeno sobre el Rto", caption = "Author: Luis Fdo Delgado")
 ```
+
+#### Graficos de interaccion
 
 ```{r}
 arroz %>% group_by(Variedad, Nitrogeno) %>% 
