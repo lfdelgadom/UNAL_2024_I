@@ -1,14 +1,18 @@
 # Load required libraries
 library(tidyverse)
 library(ggpubr)
+library(readr)
 
 # Load and inspect data
-Datos_temp <- read.csv("../Reg_lineal/Data/Temperatura_suelo.csv", sep = ";")
+
+Datos_temp <- read_delim("data/Temperatura_suelo.csv", 
+                                delim = ";", escape_double = FALSE, trim_ws = TRUE)
 print(head(Datos_temp))
+print(tail(Datos_temp))
 
 # Compute and plot correlation matrix
 Datos_temp %>%
-  cor() %>%
+  cor(use = "complete.obs") %>%
   round(2) %>%
   print()
 
@@ -16,7 +20,7 @@ plot(Datos_temp)
 
 # Basic scatter plot with ggplot2
 ggplot(data = Datos_temp, aes(x = Cobertura, y = Temperatura)) +
-  geom_point(size = 3, colour = "red", shape = 14) +
+  geom_point(size = 3, colour = "red", shape = 10) +
   geom_text(aes(label = paste("r =", round(cor(Cobertura, Temperatura), 3)), x = 90, y = 30)) +
   geom_text(aes(label = "Author: Luis Delgado"), x = 60, y = 20, size = 3) +
   labs(x = "Cobertura (%)", y = "Temperatura (C)", title = "Temp vs Cobertura") +
@@ -32,6 +36,7 @@ modelo$fitted.values
 
 # errores
 modelo$residuals
+hist(modelo$residuals)
 
 # Coeficientes
 b0 = modelo$coefficients[1]###intercepto en y
@@ -46,6 +51,8 @@ print(b1)
 coef(modelo)
 Datos_temp <- Datos_temp %>%
   bind_cols(predict(modelo, interval = "prediction", level = 0.9))
+
+print()
 
 # Plot with predictions and confidence intervals
 Datos_temp %>% ggplot(aes(x = Cobertura, y = Temperatura)) +
