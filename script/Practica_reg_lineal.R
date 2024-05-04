@@ -4,9 +4,10 @@ library(ggpubr)
 library(readr)
 
 # Load and inspect data
+Datos_temp <- read_delim("data/Temperatura_suelo.csv",
+  delim = ";", escape_double = FALSE, trim_ws = TRUE
+)
 
-Datos_temp <- read_delim("data/Temperatura_suelo.csv", 
-                                delim = ";", escape_double = FALSE, trim_ws = TRUE)
 print(head(Datos_temp))
 print(tail(Datos_temp))
 
