@@ -1,13 +1,7 @@
-# List current directory contents
-dir()
-
-# Remove all objects from the current workspace
-rm(list = ls())
-
 # Load necessary libraries
 library(readxl)
 library(tidyverse)
-library(agriutilities)
+library(agriutilities) #install first
 
 # Load data from Excel
 aji_regresion_multiple <- read_excel("Data/aji regresion multiple.xlsx")
