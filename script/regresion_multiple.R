@@ -2,6 +2,7 @@
 library(readxl)
 library(tidyverse)
 library(agriutilities) #install first
+library(corrplot)
 
 # Load data from Excel
 aji_regresion_multiple <- read_excel("Data/aji regresion multiple.xlsx")
@@ -40,9 +41,9 @@ chart.Correlation(aji_regresion_multiple, histogram = TRUE, pch = 19)
 pairs.panels(
   aji_regresion_multiple,
   method = "pearson",
-  density = FALSE,
+  density = T,
   ellipses = FALSE,
-  smooth = FALSE
+  smooth = T
 )
 
 # Shapiro-Wilk test for normality
@@ -74,10 +75,14 @@ summary(RLM_Backward)
 RLM_Stepwise <- step(RLM_vacio, scope = list(lower = RLM_vacio, upper = RLM_Completo), direction = "both")
 summary(RLM_Stepwise)
 
-#modelo sin variables significativas
-RLM_propio <- lm(rto ~ pesofrugr + nfru + diasfl + diasfr)
-summary(RLM_propio)
+#modelo sin variables significativas <- Luis Fernando
+RLM_propio1 <- lm(rto ~ pesofrugr + nfru + diasfl + diasfr)
+summary(RLM_propio1)
+AIC(RLM_propio1)
 
+RLM_propio2 <- lm(rto ~ pesofrugr + nfru + diasfl + hclargmm)
+summary(RLM_propio2)
+AIC(RLM_propio2)
 
 
 
@@ -227,7 +232,8 @@ ggplot(
   geom_point(size = 4) +
   theme_light()
 
-data(wine)
+
+
 
 
 library("HDclassif")
