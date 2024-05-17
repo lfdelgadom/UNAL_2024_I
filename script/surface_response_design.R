@@ -16,6 +16,7 @@ library(rsm)
 ?rsm # ayuda
 datos_ccc <-  coded.data(data = datos, 
                          x1 ~ (tiempo - 35)/5, x2 ~ (temperatura - 155)/5)
+as.data.frame(datos_ccc)
 
 
 # Grafico del dise?o
@@ -24,6 +25,8 @@ plot(datos_ccc[ ,c(2:3)], pch = 19, main = "Diseno factorial 2^2")
 # Modelo de primer orden
 modelo1 <- rsm(y1 ~ FO(x1, x2) + TWI(x1, x2), data = datos_ccc)
 summary(modelo1)
+
+# hacer el grafico de interaccion para mostrar que existe
 
 # interaccion no significativa
 # Modelo de primer orden sin interaccion
@@ -49,10 +52,17 @@ dev.off()
 datos_2 <- read_excel("Data/datos_rsm_ccc.xlsx", sheet = 2)
 datos_2
 
+# Generar puntos axiales para dos factores
+diseno <- ccd(2, alpha = 'spherical')
+diseno
+
 # Codificamos los factores
 datos_cc2 <- coded.data(data = datos_2, 
                         x1 ~ (tiempo - 85)/5, x2 ~ (temperatura - 175)/5)
 as.data.frame(datos_cc2)
+
+# cerrar dispositivo grafico
+dev.off()
 
 # Grafico del dise?o
 plot(datos_cc2[ , c(2:3)], pch = 16, main = "Diseno CCC")
