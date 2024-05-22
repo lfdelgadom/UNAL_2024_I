@@ -1,7 +1,11 @@
 # Cargar las bibliotecas necesarias
 library(tidyverse)
 library(readr)
-library(factoextra)
+
+if(!require(devtools)) install.packages("devtools")
+devtools::install_github("kassambara/factoextra")
+
+library(factoextra) #
 library(FactoMineR)
 library(agriutilities)
 
