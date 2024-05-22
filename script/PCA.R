@@ -2,8 +2,8 @@
 library(tidyverse)
 library(readr)
 
-if(!require(devtools)) install.packages("devtools")
-devtools::install_github("kassambara/factoextra")
+# if(!require(devtools)) install.packages("devtools")
+# devtools::install_github("kassambara/factoextra")
 
 library(factoextra) #
 library(FactoMineR)
@@ -11,6 +11,9 @@ library(agriutilities)
 
 # Leer datos del archivo CSV
 data_soil <- read_csv("data/data_soil.csv")
+
+# explorar datos de suelos
+str(data_soil)
 
 # Crear una matriz de correlación y guardar la visualización
 data_soil_cor <- gg_cor(
@@ -27,8 +30,11 @@ ggsave("images/corplot_soils.png", plot = data_soil_cor, width = 12, height = 10
 # Realizar el análisis de componentes principales (PCA)
 pca_data_soil <- data_soil %>%
   dplyr::select(-Finca) %>%  # Excluir la columna 'Finca'
-  column_to_rownames("Descripcion") %>>%  # Establecer 'Descripcion' como nombres de filas
+  column_to_rownames("Descripcion") %>%  # Establecer 'Descripcion' como nombres de filas
   PCA(scale.unit = TRUE, graph = FALSE)  # Ejecutar PCA con escalado y sin gráficos automáticos
+
+
+pca_data_soil
 
 # Acceder a los valores propios y contribuciones de variables del PCA
 pca_data_soil$eig
@@ -38,6 +44,8 @@ pca_data_soil$var
 # Visualizar las variables del PCA y guardar la imagen
 var_plot <- fviz_pca_var(pca_data_soil, col.var = "contrib", repel = TRUE) +
   labs(title = "PCA Soil Variables")
+var_plot
+
 ggsave("images/PCA_var_soil.png", plot = var_plot, units = "in", dpi = 300, width = 8, height = 6)
 
 # Visualizar y mostrar el gráfico de las variables del PCA
